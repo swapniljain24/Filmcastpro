@@ -1,52 +1,21 @@
-name: CI/CD Hello World Pipeline
+name: Python Hello World
 
-on:
-  push:
-    branches: [ main ]
-  workflow_dispatch:  # Allows manual triggering
+on: [push, workflow_dispatch]
 
 jobs:
-  build-and-test:
+  python-hello:
     runs-on: ubuntu-latest
     
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      
-    - name: Setup Node.js (if needed)
-      uses: actions/setup-node@v3
-      with:
-        node-version: '18'
-        
-    - name: Run Hello World script
-      id: hello
-      run: |
-        echo "🚀 Starting Hello World Pipeline"
-        echo "Current directory: $(pwd)"
-        echo "Files in repo:"
-        ls -la
-        
-    - name: Create artifact
-      run: echo "Hello World from GitHub Actions!" > hello-world.txt
-      
-    - name: Upload artifact
-      uses: actions/upload-artifact@v3
-      with:
-        name: hello-world-output
-        path: hello-world.txt
-        
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build-and-test
+    - uses: actions/checkout@v4
     
-    steps:
-    - name: Download artifact
-      uses: actions/download-artifact@v3
+    - name: Set up Python
+      uses: actions/setup-python@v4
       with:
-        name: hello-world-output
+        python-version: '3.x'
         
-    - name: Display deployment message
+    - name: Run Python script
       run: |
-        echo "✅ Deployment Phase"
-        echo "Hello World deployment complete!"
-        cat hello-world.txt
+        python -c "print('Hello from Python! 🐍')"
+        # Or run a script file if you have one
+        # python hello.py
